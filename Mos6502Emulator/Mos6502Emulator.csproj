@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Mos6502Disassembler\Mos6502Disassembler.csproj" />
+      <ProjectReference Include="..\Mos6502\Mos6502.csproj" />
+      <ProjectReference Include="..\VirtualMachine\VirtualMachine.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="mos\6502_functional_test.bin">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>

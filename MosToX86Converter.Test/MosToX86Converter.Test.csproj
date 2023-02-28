@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+        <PackageReference Include="NUnit" Version="3.13.2" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+        <PackageReference Include="coverlet.collector" Version="3.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Mos6502Assembler\Mos6502Assembler.csproj" />
+      <ProjectReference Include="..\Mos6502Disassembler\Mos6502Disassembler.csproj" />
+      <ProjectReference Include="..\Mos6502Emulator\Mos6502Emulator.csproj" />
+      <ProjectReference Include="..\Mos6502\Mos6502.csproj" />
+      <ProjectReference Include="..\MosToX86Converter\MosToX86Converter.csproj" />
+      <ProjectReference Include="..\VirtualMachine\VirtualMachine.csproj" />
+      <ProjectReference Include="..\X86Assembly\X86Assembly.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="runtime_sync.c">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="mos\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="native\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="native\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ClCompile Include="mos\gcd.c" />
+      <ClCompile Include="mos\matrix.c" />
+      <ClCompile Include="mos\multi_add.c" />
+      <ClCompile Include="native\runtime.cpp" />
+    </ItemGroup>
+
+</Project>

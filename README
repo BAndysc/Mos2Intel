@@ -1,0 +1,37 @@
+# Translator MOS 6502 - x86-64
+### Załącznik do pracy magisterskiej ,,Tłumaczenie aplikacji przeznaczonych na procesor MOS 6502 na architekturę x86-64'' Bartosza Korczyńskiego
+### Praca wykonana pod kierunkiem dr. hab. inż. Marcina Peczarskiego
+
+## Zależności
+ * `dotnet 6.0`
+ * `yasm`
+ * `clang`
+ * `cmake`
+ * `SDL 2.0` - w przypadku narzędzia NesConverter
+ * `gianlucag/mos6502` - interpreter procesora MOS 6502 napisany w C++ autorstwa Gianluca'i Ghettiniego, użyty tutaj do porównania wydajności metody translacji i metody interpretacji. W celu instalacji zależności należy wywołać komendę `git submodule update --init --recursive`
+
+## Elementy projektu
+* **Mos6502Assembler** - narzędzie linii poleceń oraz biblioteka, która umożliwia asemblację kodu napisanego w języku asemblera dla procesora MOS 6502 do postaci pliku obiektowego,
+* **Mos6502Disassembler** - narzędzie linii poleceń oraz biblitoeka, które odwrotnie przetworza obiektowy kod na kod źródłowy w języku asemblera,
+* **Mos6502Emulator** - interpreter procesora MOS 6502, używany w celu porównania działania różnych metod emulacji,
+* **MosToX86Converter** - najważniejsza część kodu, czyli komponent odpowiedzialny za tłumaczenie skompilowanego kodu z postaci obiektowej MOS 6502 na architekturę x86-64,
+* **MosToX86Converter.Test** - testy sprawdzające poprawność oraz wydajność translacji,
+* **NesConverter** - narzędzie służące do konwersji plików ROM urządzenia Nintendo Entertainment System na program wykonywalny architektury x86-64; konwersja jest możliwa na systemach operacyjnych Linux oraz macOS,
+* **NesConverter/runtime** - środowisko uruchomieniowe przetłumaczonych gier przeznaczonych na konsolę NES.
+
+## Użycie
+
+1. Uruchomienie wszystkich testów:
+
+```
+dotnet test
+```
+
+2. Konwersja pliku iNES na plik wykonywalny ELF (Linux) / Mach-O (macOS):
+
+```
+dotnet run --project NesConverter/NesConverter.csproj <ścieżka do pliku iNES> <ścieżka do pliku wyjściowego>
+```
+
+
+### 2022 Bartosz Korczyński

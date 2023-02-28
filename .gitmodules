@@ -1,0 +1,3 @@
+[submodule "MosToX86Converter.Test/native/mos6502"]
+	path = MosToX86Converter.Test/native/mos6502
+	url = https://github.com/gianlucag/mos6502

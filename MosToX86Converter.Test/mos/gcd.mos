@@ -1,0 +1,163 @@
+.define n1L $00
+.define n1H $01
+
+.define n2L $02
+.define n2H $03
+
+.define aL $04
+.define aH $05
+
+.define bL $06
+.define bH $07
+
+.define maxL $08
+.define maxH $09
+
+.define maxLV $ff
+.define maxHV $1f
+
+.macro eq A1 B2
+    lda A1
+    cmp B2
+    bne end
+    lda A1+1
+    cmp B2+1
+    end:
+.endmacro
+
+; sets ZERO flag to 1 if A1 > B2 otherwise 0
+.macro gt A1 B2
+    lda A1+1
+    cmp B2+1
+    beq rowne ; hi == hi
+    bcc nie ; hi < hi
+    bcs tak ; jmp
+    
+    rowne:
+    lda A1
+    cmp B2
+    beq nie ; low byte eq
+    bcc nie ; low byte < low byte
+    bcs tak ; jmp
+    
+nie:
+    LDA #$0 ; set ZERO flag to 0
+    bcc end ; jmp
+tak:
+    LDA #1
+end:
+.endmacro
+
+; sets ZERO flag to 1 if A1 < B2 otherwise 0
+.macro lt A1 B2
+    lda A1+1
+    cmp B2+1
+    beq rowne ; hi == hi
+    bcc tak ; hi < hi
+    bcs nie ; jmp
+    
+    rowne: ; musimy sprawdzic niski bajt, bo remis
+    lda A1
+    cmp B2
+    beq nie ; low byte eq
+    bcc tak ; low byte < low byte
+    bcs nie ; jmp
+    
+nie:
+    LDA #$1 ; set ZERO flag to 0
+    bcs end ; jmp
+tak:
+    LDA #0
+end:
+.endmacro
+
+.macro  inc16   addr
+        clc
+        lda     addr
+        adc     #$01
+        sta     addr
+        lda     addr+1
+        adc     #$00
+        sta     addr+1
+.endmacro
+
+.macro copy A1 A2 ; A1 = A2
+    lda A2
+    sta A1
+    lda A2+1
+    sta A1+1
+.endmacro
+
+.macro zero A ; A = 0
+    lda #0
+    sta A
+    sta A+1
+.endmacro
+
+.macro sub A B ; A -= B
+    sec				; set carry for borrow purpose
+	lda A
+	sbc B			; perform subtraction on the LSBs
+	sta A
+	lda A+1			; do the same for the MSBs, with carry
+	sbc B+1			; set according to the previous result
+	sta A+1
+.endmacro
+
+org $600
+
+lda #$03
+sta maxH
+lda #$ff
+sta maxL
+
+
+while1:
+; while (LT(a, max))
+    eq aL maxL
+    
+    beq end3PART
+    ;; LONG JUMP FIX
+    jmp outside
+    end3PART:
+    jmp end3
+    outside:
+    ;; end LJ
+    
+    inc16 aL
+    zero bL
+    
+    while2:
+    ; while (LT(b, max))
+        eq bL maxL
+        beq end2
+        
+        inc16 bL
+        copy n1L aL
+        copy n2L bL
+        
+        while3:
+        ; while (!EQ(n1, n2))
+            eq n1L n2L
+            beq end4
+            
+            ; if (GT(n1, n2))
+            gt n1L n2L
+            beq wieksze
+            sub n1L n2L
+            jmp while3
+            
+            wieksze:
+            ; n1 -= n2
+            sub n2L n1L
+            
+            jmp while3
+        
+        end4:
+        jmp while2
+        
+    end2:
+    jmp while1
+
+end3:
+HLT
